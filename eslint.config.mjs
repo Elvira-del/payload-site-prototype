@@ -28,6 +28,9 @@ const eslintConfig = [
           caughtErrorsIgnorePattern: '^(_|ignore)',
         },
       ],
+      '@next/next/no-css-tags': 'off',
+      '@next/next/no-styled-jsx-in-document': 'off',
+      '@next/next/no-sync-scripts': 'off',
     },
   },
   {

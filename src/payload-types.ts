@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    partners: Partner;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +95,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -199,7 +201,7 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | PartnersTickerBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -780,6 +782,75 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersTickerBlock".
+ */
+export interface PartnersTickerBlock {
+  /**
+   * Optional heading to display before the ticker (e.g., "Our Partners")
+   */
+  heading?: string | null;
+  /**
+   * Choose how to display partners in the ticker
+   */
+  displayMode: 'logos-and-names' | 'logos-only';
+  /**
+   * Duration in seconds for one complete animation cycle. Lower = faster.
+   */
+  animationSpeed?: number | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'partnersTicker';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  name: string;
+  /**
+   * Используется в URL: /partners/[slug]
+   */
+  slug: string;
+  status: 'draft' | 'published';
+  logo?: (number | null) | Media;
+  /**
+   * Отображается в списке партнёров и превью.
+   */
+  shortDescription?: string | null;
+  fullDescription?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  partnerType?: ('reseller' | 'integration' | 'technology' | 'other') | null;
+  country?: string | null;
+  region?: string | null;
+  /**
+   * С какими продуктами компании работает партнёр.
+   */
+  products?: string[] | null;
+  /**
+   * Меньше число — выше в списке. Оставь пустым, если не важно.
+   */
+  priority?: number | null;
+  isFeatured?: boolean | null;
+  showInTicker?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -989,6 +1060,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'partners';
+        value: number | Partner;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
@@ -1086,6 +1161,7 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        partnersTicker?: T | PartnersTickerBlockSelect<T>;
       };
   meta?:
     | T
@@ -1182,6 +1258,17 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersTickerBlock_select".
+ */
+export interface PartnersTickerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  displayMode?: T;
+  animationSpeed?: T;
   id?: T;
   blockName?: T;
 }
@@ -1352,6 +1439,27 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  status?: T;
+  logo?: T;
+  shortDescription?: T;
+  fullDescription?: T;
+  partnerType?: T;
+  country?: T;
+  region?: T;
+  products?: T;
+  priority?: T;
+  isFeatured?: T;
+  showInTicker?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
