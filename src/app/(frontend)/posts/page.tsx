@@ -24,40 +24,40 @@ export default async function Page() {
       slug: true,
       categories: true,
       meta: true,
+      heroImage: true,
     },
+    sort: '-publishedAt',
   })
 
   return (
-    <div className="pt-24 pb-24">
+    <main className="pt-24 pb-24">
       <PageClient />
-      <div className="container mb-16">
-        <div className="prose dark:prose-invert max-w-none">
-          <h1>Posts</h1>
+      <section>
+        <div className="container my-0 mx-auto">
+          <div className="prose dark:prose-invert max-w-none">
+            <h1 className="text-gray-900 mb-4">Blog</h1>
+          </div>
+
+          <PageRange
+            collection="posts"
+            currentPage={posts.page}
+            limit={12}
+            totalDocs={posts.totalDocs}
+          />
+
+          <CollectionArchive posts={posts.docs} />
+
+          {posts.totalPages > 1 && posts.page && (
+            <Pagination page={posts.page} totalPages={posts.totalPages} />
+          )}
         </div>
-      </div>
-
-      <div className="container mb-8">
-        <PageRange
-          collection="posts"
-          currentPage={posts.page}
-          limit={12}
-          totalDocs={posts.totalDocs}
-        />
-      </div>
-
-      <CollectionArchive posts={posts.docs} />
-
-      <div className="container">
-        {posts.totalPages > 1 && posts.page && (
-          <Pagination page={posts.page} totalPages={posts.totalPages} />
-        )}
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Posts`,
+    title: `Blog`,
   }
 }
